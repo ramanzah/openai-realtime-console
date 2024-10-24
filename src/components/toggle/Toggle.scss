@@ -6,18 +6,18 @@
   cursor: pointer;
   overflow: hidden;
 
-  background-color: #ececf1;
-  color: #101010;
+  background-color: #303030; /* Dark background */
+  color: #e0e0e0; /* Light text color */
   height: 40px;
   border-radius: 1000px;
 
   &:hover {
-    background-color: #d8d8d8;
+    background-color: #404040; /* Darker hover background */
   }
 
   div.label {
     position: relative;
-    color: #666;
+    color: #e0e0e0; /* More contrasting text color */
     transition: color 0.1s ease-in-out;
     padding: 0px 16px;
     z-index: 2;
@@ -29,7 +29,7 @@
   }
 
   .toggle-background {
-    background-color: #101010;
+    background-color: rgba(224, 224, 224, 0.5); /* Semi-transparent background */
     position: absolute;
     top: 0px;
     left: 0px;

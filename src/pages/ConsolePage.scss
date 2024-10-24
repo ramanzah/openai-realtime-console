@@ -7,7 +7,9 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin: 0px 8px;
+  margin: 0px 0px;
+  background-color: #181818; /* Dark background */
+  color: #e0e0e0; /* Light text color */
   & > div {
     flex-shrink: 0;
   }
@@ -21,6 +23,7 @@
     align-items: center;
     padding: 8px 16px;
     min-height: 40px;
+    background-color: #202020; /* Darker background for top section */
     .content-title {
       flex-grow: 1;
       display: flex;
@@ -51,9 +54,10 @@
         padding-top: 16px;
         padding-bottom: 4px;
         position: relative;
+        color: #e0e0e0; /* Light text color */
       }
       .content-block-body {
-        color: #6e6e7f;
+        color: #b0b0b0; /* Slightly lighter text color */
         position: relative;
         flex-grow: 1;
         padding: 8px 0px;
@@ -78,6 +82,7 @@
         flex-shrink: 0;
         overflow: hidden;
         position: relative;
+        background-color: #202020; /* Darker background for right section */
         .content-block-title {
           position: absolute;
           display: flex;
@@ -87,12 +92,13 @@
           top: 16px;
           left: 16px;
           padding: 4px 16px;
-          background-color: #fff;
+          background-color: #303030; /* Darker background for titles */
           border-radius: 1000px;
           min-height: 32px;
           z-index: 9999;
           text-align: center;
           white-space: pre;
+          color: #e0e0e0; /* Light text color */
           &.bottom {
             top: auto;
             bottom: 16px;
@@ -104,7 +110,7 @@
         height: 250px;
         max-height: 250px;
         white-space: pre;
-        background-color: #ececf1;
+        background-color: #202020; /* Darker background for kv section */
         .content-block-body {
           padding: 16px;
           margin-top: 56px;
@@ -131,7 +137,7 @@
         overflow: hidden;
       }
       .events {
-        border-top: 1px solid #e7e7e7;
+        border-top: 1px solid #303030; /* Darker border */
       }
       .conversation {
         display: flex;
@@ -141,7 +147,7 @@
         height: 200px;
         min-height: 0;
         max-height: 200px;
-        border-top: 1px solid #e7e7e7;
+        border-top: 1px solid #303030; /* Darker border */
       }
     }
   }
@@ -158,7 +164,7 @@
       position: absolute;
       top: 0px;
       right: -20px;
-      background: #aaa;
+      background: #555;
       color: #fff;
       display: flex;
       border-radius: 16px;
@@ -188,7 +194,7 @@
       }
     }
     .speaker-content {
-      color: #18181b;
+      color: #e0e0e0; /* Light text color */
       overflow: hidden;
       word-wrap: break-word;
     }
@@ -211,14 +217,14 @@
     .event-details {
       display: flex;
       flex-direction: column;
-      color: #18181b;
+      color: #e0e0e0; /* Light text color */
       gap: 8px;
       .event-summary {
         padding: 4px 8px;
         margin: 0px -8px;
         &:hover {
           border-radius: 8px;
-          background-color: #f0f0f0;
+          background-color: #303030; /* Darker hover background */
         }
         cursor: pointer;
         display: flex;
@@ -276,5 +282,10 @@
         color: currentColor;
       }
     }
+  }
+
+  .content-api-key {
+    display: flex;
+    gap: 10px; /* Add space between buttons */
   }
 }

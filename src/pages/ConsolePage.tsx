@@ -23,6 +23,7 @@ import { X, Edit, Zap, ArrowUp, ArrowDown } from 'react-feather';
 import { Button } from '../components/button/Button';
 import { Toggle } from '../components/toggle/Toggle';
 import { Map } from '../components/Map';
+import { PromptModal } from '../components/Modal/PromptModal';
 
 import './ConsolePage.scss';
 import { isJsxOpeningLikeElement } from 'typescript';
@@ -62,7 +63,7 @@ export function ConsolePage() {
   const apiKey = LOCAL_RELAY_SERVER_URL
     ? ''
     : localStorage.getItem('tmp::voice_api_key') ||
-      prompt('OpenAI API Key') ||
+      window.prompt('OpenAI API Key') ||
       '';
   if (apiKey !== '') {
     localStorage.setItem('tmp::voice_api_key', apiKey);
@@ -116,7 +117,7 @@ export function ConsolePage() {
     [key: string]: boolean;
   }>({});
   const [isConnected, setIsConnected] = useState(false);
-  const [canPushToTalk, setCanPushToTalk] = useState(true);
+  const [canPushToTalk, setCanPushToTalk] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [memoryKv, setMemoryKv] = useState<{ [key: string]: any }>({});
   const [coords, setCoords] = useState<Coordinates | null>({
@@ -124,6 +125,8 @@ export function ConsolePage() {
     lng: -122.418137,
   });
   const [marker, setMarker] = useState<Coordinates | null>(null);
+  const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
+  const [userPrompt, setUserPrompt] = useState(instructions);
 
   /**
    * Utility for formatting the timing of logs
@@ -150,7 +153,7 @@ export function ConsolePage() {
    * When you click the API key
    */
   const resetAPIKey = useCallback(() => {
-    const apiKey = prompt('OpenAI API Key');
+    const apiKey = window.prompt('OpenAI API Key');
     if (apiKey !== null) {
       localStorage.clear();
       localStorage.setItem('tmp::voice_api_key', apiKey);
@@ -167,11 +170,19 @@ export function ConsolePage() {
     const wavRecorder = wavRecorderRef.current;
     const wavStreamPlayer = wavStreamPlayerRef.current;
 
+    // Clear state variables when connecting
+    setRealtimeEvents([]);
+    setItems([]);
+    setMemoryKv({});
+    setCoords({
+      lat: 37.775593,
+      lng: -122.418137,
+    });
+    setMarker(null);
+
     // Set state variables
     startTimeRef.current = new Date().toISOString();
     setIsConnected(true);
-    setRealtimeEvents([]);
-    setItems(client.conversation.getItems());
 
     // Connect to microphone
     await wavRecorder.begin();
@@ -185,7 +196,6 @@ export function ConsolePage() {
       {
         type: `input_text`,
         text: `Hello!`,
-        // text: `For testing purposes, I want you to list ten car brands. Number each item, e.g. "one (or whatever number you are one): the item name".`
       },
     ]);
 
@@ -199,14 +209,6 @@ export function ConsolePage() {
    */
   const disconnectConversation = useCallback(async () => {
     setIsConnected(false);
-    setRealtimeEvents([]);
-    setItems([]);
-    setMemoryKv({});
-    setCoords({
-      lat: 37.775593,
-      lng: -122.418137,
-    });
-    setMarker(null);
 
     const client = clientRef.current;
     client.disconnect();
@@ -500,6 +502,18 @@ export function ConsolePage() {
     };
   }, []);
 
+  useEffect(() => {
+    // Set VAD as the default turn end type when the component mounts
+    changeTurnEndType('server_vad');
+  }, []);
+
+  const handlePromptSave = (newPrompt: string) => {
+    setUserPrompt(newPrompt);
+    setIsPromptModalOpen(false);
+    // Update the client with new instructions
+    clientRef.current.updateSession({ instructions: newPrompt });
+  };
+
   /**
    * Render the application
    */
@@ -511,6 +525,13 @@ export function ConsolePage() {
           <span>realtime console</span>
         </div>
         <div className="content-api-key">
+          <Button
+            icon={Edit}
+            iconPosition="end"
+            buttonStyle="flush"
+            label="edit prompt"
+            onClick={() => setIsPromptModalOpen(true)}
+          />
           {!LOCAL_RELAY_SERVER_URL && (
             <Button
               icon={Edit}
@@ -664,7 +685,7 @@ export function ConsolePage() {
           </div>
           <div className="content-actions">
             <Toggle
-              defaultValue={false}
+              defaultValue={true}
               labels={['manual', 'vad']}
               values={['none', 'server_vad']}
               onChange={(_, value) => changeTurnEndType(value)}
@@ -726,6 +747,12 @@ export function ConsolePage() {
           </div>
         </div>
       </div>
+      <PromptModal
+        isOpen={isPromptModalOpen}
+        currentPrompt={userPrompt}
+        onClose={() => setIsPromptModalOpen(false)}
+        onSave={handlePromptSave}
+      />
     </div>
   );
 }

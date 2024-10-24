@@ -8,8 +8,8 @@
   font-weight: 400;
   font-style: normal;
   border: none;
-  background-color: #ececf1;
-  color: #101010;
+  background-color: #303030; /* Dark background */
+  color: #e0e0e0; /* Light text color */
   border-radius: 1000px;
   padding: 8px 24px;
   min-height: 42px;
@@ -17,18 +17,16 @@
   outline: none;
 
   &.button-style-action {
-    background-color: #101010;
-    color: #ececf1;
+    background-color: #404040; /* Darker action button */
     &:hover:not([disabled]) {
-      background-color: #404040;
+      background-color: #505050; /* Darker hover background */
     }
   }
 
   &.button-style-alert {
-    background-color: #f00;
-    color: #ececf1;
+    background-color: #990000; /* Dark alert button */
     &:hover:not([disabled]) {
-      background-color: #f00;
+      background-color: #990000;
     }
   }
 
